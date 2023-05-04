@@ -1,0 +1,125 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<!-- jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap CSS library -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- Bootstrap JavaScript library -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<div class="container" style="margin-top:10%">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 alert alert-info">
+            <h3 class="text-center">Log In</h3>
+            <form id="loginform">
+                <div id="msg">
+                    <ul style="color:red">Invalid Email or Password</ul>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                        <input class="form-control" type="email" name="Email" id="logEmail" placeholder="Email" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input class="form-control" type="password" name="Password" id="logPassword" placeholder="Password" />
+                    </div>
+                </div>
+            </form>
+            <div class="form-group">
+                <button class="btn btn-info form-control" type="submit" onclick="LoginFunction()"><i class="glyphicon glyphicon-log-in"> LogIn</i></button>
+            </div>
+            <div>
+                <a style="float:left">Forgot password?</a><a style="float:right; cursor:pointer" onclick="SignUp()">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Registration Form*@
+
+<div class="modal" id="ShowModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Registration Form</h4>
+            </div>
+            <div class="modal-body">
+                <form id="Registration">
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input class="form-control" type="text" name="Username" id="user" placeholder="Username" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                            <input class="form-control" type="email" name="Email" id="Email" placeholder="Email" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input class="form-control" type="password" name="Password" id="Password" placeholder="Password" />
+                        </div>
+                    </div>
+                </form>
+                <div class="form-group">
+                    <button class="btn btn-info form-control" type="submit" onclick="SaveForm()"><i class="glyphicon glyphicon-registration-mark"> Submit</i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function SignUp() {
+        $("#ShowModal").modal();
+    }
+    function SaveForm() {
+        var data = $("#Registration").serialize();
+        $.ajax({
+            type: "post",
+            data: data,
+            url: "/Register/SaveData",
+            success: function (result) {
+                alert(result);
+            }
+        });
+    }
+
+    @*Login System*@
+    $("#msg").hide();
+    var LoginFunction = function () {
+        var data = $("#loginform").serialize();
+        $.ajax({
+            type: "post",
+            url: "/Register/CheckValidUser",
+            data: data,
+            success: function (result) {
+                if (result == "Fail") {
+                    $("#loginform")[0].reset();
+                    $("#msg").show();
+                }
+                else {
+                    window.location.href = "/Register/UserProfile";
+                    $("#msg").hide();
+                }
+            } 
+        })
+    }
+</script>
+
